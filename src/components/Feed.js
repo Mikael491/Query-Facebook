@@ -51,18 +51,30 @@ class Feed extends Component {
     );
   }
 
+  renderView() {
+    if (this.props.loggedIn) {
+      return (
+        <ListView
+          enableEmptySections
+          style={styles.feedStyle}
+          dataSource={this.dataSource}
+          renderRow={this.renderRow}
+          renderSeparator={this.renderSeparator}
+          renderFooter={this.renderFooter.bind(this)}
+          onEndReached={this.onEndReached.bind(this)}
+          onEndReachedThreshold={1}
+        />
+      );
+    } else {
+      return (
+          <Spinner />
+      );
+    }
+  }
+
   render() {
     return (
-      <ListView
-        enableEmptySections
-        style={styles.feedStyle}
-        dataSource={this.dataSource}
-        renderRow={this.renderRow}
-        renderSeparator={this.renderSeparator}
-        renderFooter={this.renderFooter.bind(this)}
-        onEndReached={this.onEndReached.bind(this)}
-        onEndReachedThreshold={1}
-      />
+      this.renderView()
     );
   }
 }
@@ -74,6 +86,11 @@ const styles = {
   seperator: {
     height: 1,
     backgroundColor: '#ddd'
+  },
+  feedLoadStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 };
 
