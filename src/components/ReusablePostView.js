@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { View, Text, Image, TouchableOpacity, ActionSheetIOS } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import { likePost } from './../actions';
 
 const OPTIONS = ['Like', 'Love', 'Haha', 'Wow', 'Sad', 'Angry', 'Cancel'];
@@ -21,8 +22,13 @@ class ReusablePostView extends Component {
     });
   }
 
+  toDetail() {
+    const { post } = this.props;
+    Actions.detail({ post });
+  }
+
   renderLikeButton() {
-    if (this.props.addLikeButton) {
+    if (this.props.timelineView) {
       return (
         <TouchableOpacity
           onPress={this.onlikePost.bind(this)}
@@ -36,6 +42,38 @@ class ReusablePostView extends Component {
             <Text style={{ color: '#B3B3B3' }}>Like</Text>
           </View>
         </TouchableOpacity>
+      );
+    }
+  }
+
+  renderTouchableCells() {
+    const { post } = this.props;
+    if (this.props.timelineView) {
+        return (
+          <TouchableOpacity
+            onPress={this.toDetail.bind(this)}
+            activeOpacity={1}
+          >
+            <Text style={styles.postTextStyle}>{post.message}</Text>
+            <View style={styles.imageContainerStyle}>
+              <Image
+              style={styles.postImageStyle}
+              source={renderImage(post)}
+              />
+            </View>
+          </TouchableOpacity>
+        );
+    } else {
+      return (
+        <View>
+          <Text style={styles.postTextStyle}>{post.message}</Text>
+          <View style={styles.imageContainerStyle}>
+            <Image
+            style={styles.postImageStyle}
+            source={renderImage(post)}
+            />
+          </View>
+        </View>
       );
     }
   }
@@ -58,13 +96,7 @@ class ReusablePostView extends Component {
               {`${moment(post.created_time).format('MMMM DD')} at ${new Date(post.created_time).toLocaleTimeString('en-US').replace(/:\d+ /, '').toLowerCase()}`}
             </Text>
           </View>
-          <Text style={styles.postTextStyle}>{post.message}</Text>
-          <View style={styles.imageContainerStyle}>
-            <Image
-            style={styles.postImageStyle}
-            source={renderImage(post)}
-            />
-          </View>
+          {this.renderTouchableCells()}
           {this.renderLikeButton()}
         </View>
       </View>
@@ -112,6 +144,7 @@ const styles = {
     marginTop: 5
   },
   postTextStyle: {
+    marginBottom: 5,
     fontSize: 12,
     fontWeight: '400',
     color: '#4D4D4D'
