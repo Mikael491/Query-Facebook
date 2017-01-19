@@ -41,17 +41,8 @@ export const likePost = (objectID) => {
   return (dispatch) => {
     FacebookService.likePost(objectID, (error, result) => {
       if (!error) {
-        console.log(result);
+        dispatch({ type: 'like-post', payload: result.success });
       } else {
-        //Error =
-        // {
-        //   "error": {
-        //     "message": "(#3) Publishing likes through the API is only available for page access tokens",
-        //     "type": "OAuthException",
-        //     "code": 3,
-        //     "fbtrace_id": "EzSLRz/uzdx"
-        //   }
-        // }
         console.log(error);
       }
     });
