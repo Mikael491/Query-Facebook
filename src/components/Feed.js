@@ -42,7 +42,7 @@ class Feed extends Component {
   }
 
   renderFooter() {
-    return this.props.loading ? <Spinner /> : null;
+    return this.props.loading ? <Spinner size={'small'} /> : null;
   }
 
   renderSeparator(sectionID, rowID) {

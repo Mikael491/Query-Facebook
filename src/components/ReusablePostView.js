@@ -171,9 +171,10 @@ const styles = {
   }
 };
 
+//implemented future support for Facebook Reactions per challenge notes
 const mapStateToProps = (state) => {
-  const { liked, color } = state.likes;
-  return { liked, color };
+  const { liked } = state.likes;
+  return { liked };
 };
 
 export default connect(mapStateToProps, { likePost })(ReusablePostView);
