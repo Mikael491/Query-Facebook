@@ -41,6 +41,7 @@ class ReusablePostView extends Component {
   }
 
   render() {
+    console.log(this.props.post);
     const { post } = this.props;
     return (
       <View style={styles.containerStyle}>
@@ -54,7 +55,7 @@ class ReusablePostView extends Component {
           <View>
             <Text style={styles.userNameStyle}>{post.from.name}</Text>
             <Text style={styles.timestampStyle}>
-              {`${moment(post.created_time).format('MMMM DD')} at ${new Date(post.created_time).toLocaleTimeString().replace(/:\d+ /, '').toLowerCase()}`}
+              {`${moment(post.created_time).format('MMMM DD')} at ${new Date(post.created_time).toLocaleTimeString('en-US').replace(/:\d+ /, '').toLowerCase()}`}
             </Text>
           </View>
           <Text style={styles.postTextStyle}>{post.message}</Text>
