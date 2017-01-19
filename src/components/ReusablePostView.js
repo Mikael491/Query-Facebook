@@ -93,7 +93,7 @@ class ReusablePostView extends Component {
           <View>
             <Text style={styles.userNameStyle}>{post.from.name}</Text>
             <Text style={styles.timestampStyle}>
-              {`${moment(post.created_time).format('MMMM DD')} at ${new Date(post.created_time).toLocaleTimeString('en-US').replace(/:\d+ /, '').toLowerCase()}`}
+              {`${moment(post.created_time).format('MMMM DD')} at ${moment(post.created_time).format('h:mma')}`}
             </Text>
           </View>
           {this.renderTouchableCells()}
