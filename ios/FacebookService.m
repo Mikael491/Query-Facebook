@@ -21,7 +21,7 @@ RCT_EXPORT_METHOD(login:(NSString *)access_token:(RCTResponseSenderBlock)callbac
   callback(@[[NSNull null], @TRUE]);
 }
 
-//TODO: Refactor/consolidate all query methods
+//TODO: Refactor/consolida query methods
 
 RCT_EXPORT_METHOD(fetchPosts:(RCTResponseSenderBlock)callback) {
   if (accessToken) {
@@ -48,10 +48,10 @@ RCT_EXPORT_METHOD(fetchMorePosts:(NSString *)queryString:(RCTResponseSenderBlock
   }
 }
 
-RCT_EXPORT_METHOD(likePost:(NSString *)queryString:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(likePost:(NSString *)objectID:(RCTResponseSenderBlock)callback) {
   if (accessToken) {
     FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
-                                  initWithGraphPath:[NSString stringWithFormat:@"%@", queryString]
+                                  initWithGraphPath:[NSString stringWithFormat:@"/v2.3/%@/likes?access_token=%@", objectID, accessToken.tokenString]
                                   parameters:nil
                                   HTTPMethod:@"POST"];
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection,

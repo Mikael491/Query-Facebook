@@ -37,12 +37,11 @@ export const fetchMorePosts = (queryString) => {
   };
 };
 
-export const likePost = (queryString) => {
-  const likePath = StripPrefix(queryString);
+export const likePost = (objectID) => {
   return (dispatch) => {
-    FacebookService.likePost(likePath, (error, result) => {
+    FacebookService.likePost(objectID, (error, result) => {
       if (!error) {
-        console.log(result);
+        dispatch({ type: 'like-post', payload: result.success });
       } else {
         console.log(error);
       }

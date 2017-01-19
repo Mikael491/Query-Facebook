@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { View, Text, Image, TouchableOpacity, ActionSheetIOS } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import { likePost } from './../actions';
 
 const OPTIONS = ['Like', 'Love', 'Haha', 'Wow', 'Sad', 'Angry', 'Cancel'];
@@ -10,19 +11,25 @@ const CANCEL_INDEX = 6;
 class ReusablePostView extends Component {
 
   onlikePost() {
+    const objectID = this.props.post.id.slice(16);
     ActionSheetIOS.showActionSheetWithOptions({
       options: OPTIONS,
       cancelButtonIndex: CANCEL_INDEX
     },
     (index) => {
       if (index !== 6) {
-        this.props.likePost(this.props.post.actions[1].link);
+        this.props.likePost(objectID);
       }
     });
   }
 
+  toDetail() {
+    const { post } = this.props;
+    Actions.detail({ post });
+  }
+
   renderLikeButton() {
-    if (this.props.addLikeButton) {
+    if (this.props.timelineView) {
       return (
         <TouchableOpacity
           onPress={this.onlikePost.bind(this)}
@@ -33,9 +40,41 @@ class ReusablePostView extends Component {
               style={styles.likeButtonStyle}
               source={require('./../assets/likeIcon.png')}
             />
-            <Text style={{ color: '#B3B3B3' }}>Like</Text>
+            <Text style={styles.likeText}>Like</Text>
           </View>
         </TouchableOpacity>
+      );
+    }
+  }
+
+  renderTouchableCells() {
+    const { post } = this.props;
+    if (this.props.timelineView) {
+        return (
+          <TouchableOpacity
+            onPress={this.toDetail.bind(this)}
+            activeOpacity={1}
+          >
+            <Text style={styles.postTextStyle}>{post.message}</Text>
+            <View style={styles.imageContainerStyle}>
+              <Image
+              style={styles.postImageStyle}
+              source={renderImage(post)}
+              />
+            </View>
+          </TouchableOpacity>
+        );
+    } else {
+      return (
+        <View>
+          <Text style={styles.postTextStyle}>{post.message}</Text>
+          <View style={styles.imageContainerStyle}>
+            <Image
+            style={styles.postImageStyle}
+            source={renderImage(post)}
+            />
+          </View>
+        </View>
       );
     }
   }
@@ -54,16 +93,10 @@ class ReusablePostView extends Component {
           <View>
             <Text style={styles.userNameStyle}>{post.from.name}</Text>
             <Text style={styles.timestampStyle}>
-              {`${moment(post.created_time).format('MMMM DD')} at ${new Date(post.created_time).toLocaleTimeString().replace(/:\d+ /, '').toLowerCase()}`}
+              {`${moment(post.created_time).format('MMMM DD')} at ${moment(post.created_time).format('h:mma')}`}
             </Text>
           </View>
-          <Text style={styles.postTextStyle}>{post.message}</Text>
-          <View style={styles.imageContainerStyle}>
-            <Image
-            style={styles.postImageStyle}
-            source={renderImage(post)}
-            />
-          </View>
+          {this.renderTouchableCells()}
           {this.renderLikeButton()}
         </View>
       </View>
@@ -111,6 +144,7 @@ const styles = {
     marginTop: 5
   },
   postTextStyle: {
+    marginBottom: 5,
     fontSize: 12,
     fontWeight: '400',
     color: '#4D4D4D'
@@ -127,10 +161,19 @@ const styles = {
     height: 20,
     resizeMode: 'contain'
   },
+  likeText: {
+    color: '#B3B3B3'
+  },
   likeButtonContainer: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    width: 70
   }
 };
 
-export default connect(null, { likePost })(ReusablePostView);
+const mapStateToProps = (state) => {
+  const { liked, color } = state.likes;
+  return { liked, color };
+};
+
+export default connect(mapStateToProps, { likePost })(ReusablePostView);
