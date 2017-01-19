@@ -40,7 +40,7 @@ class ReusablePostView extends Component {
               style={styles.likeButtonStyle}
               source={require('./../assets/likeIcon.png')}
             />
-            <Text style={{ color: '#B3B3B3' }}>Like</Text>
+            <Text style={styles.likeText}>Like</Text>
           </View>
         </TouchableOpacity>
       );
@@ -80,7 +80,6 @@ class ReusablePostView extends Component {
   }
 
   render() {
-    console.log(this.props.post);
     const { post } = this.props;
     return (
       <View style={styles.containerStyle}>
@@ -162,10 +161,19 @@ const styles = {
     height: 20,
     resizeMode: 'contain'
   },
+  likeText: {
+    color: '#B3B3B3'
+  },
   likeButtonContainer: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    width: 70
   }
 };
 
-export default connect(null, { likePost })(ReusablePostView);
+const mapStateToProps = (state) => {
+  const { liked, color } = state.likes;
+  return { liked, color };
+};
+
+export default connect(mapStateToProps, { likePost })(ReusablePostView);
