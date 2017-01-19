@@ -11,13 +11,14 @@ const CANCEL_INDEX = 6;
 class ReusablePostView extends Component {
 
   onlikePost() {
+    const objectID = this.props.post.id.slice(16);
     ActionSheetIOS.showActionSheetWithOptions({
       options: OPTIONS,
       cancelButtonIndex: CANCEL_INDEX
     },
     (index) => {
       if (index !== 6) {
-        this.props.likePost(this.props.post.actions[1].link);
+        this.props.likePost(objectID);
       }
     });
   }
